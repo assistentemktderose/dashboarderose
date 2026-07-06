@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Treinamento Ancestral — Dashboard de Performance</title>
+<style>
+  :root{
+    --bg:#0f1210;
+    --bg-card:#171b18;
+    --bg-card2:#1d221e;
+    --border:#2a2f2a;
+    --gold:#c9a15a;
+    --gold-soft:#e8c98a;
+    --text:#eef0ea;
+    --text-dim:#9aa39a;
+    --green:#5fbf7a;
+    --red:#e2695f;
+    --amber:#e0a94a;
+    --fb:#4f8ff0;
+    --ig:#e0658f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    line-height:1.4;
+    padding:32px 6vw 80px;
+  }
+  h1,h2,h3{font-family:Georgia,'Times New Roman',serif; margin:0; font-weight:600;}
+  .eyebrow{
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--gold);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  header{
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;
+    border-bottom:1px solid var(--border);
+    padding-bottom:24px; margin-bottom:32px;
+  }
+  header h1{font-size:32px; color:var(--gold-soft);}
+  header .sub{color:var(--text-dim); font-size:14px; margin-top:6px; max-width:560px;}
+  header .period{
+    text-align:right; font-size:13px; color:var(--text-dim);
+  }
+  header .period b{color:var(--text); font-size:15px; display:block;}
+
+  section{margin-bottom:44px;}
+  .sec-title{
+    display:flex; align-items:baseline; gap:10px; margin-bottom:16px;
+  }
+  .sec-title h2{font-size:19px; color:var(--text);}
+  .sec-title .n{color:var(--gold); font-family:Georgia,serif; font-size:14px;}
+
+  /* KPI cards */
+  .kpi-grid{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:12px;
+  }
+  .kpi{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:6px;
+    padding:16px 14px; position:relative;
+  }
+  .kpi .label{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim);}
+  .kpi .val{font-family:Georgia,serif; font-size:24px; margin-top:6px; color:var(--text);}
+  .kpi .flag{
+    position:absolute; top:14px; right:14px; width:8px; height:8px; border-radius:50%;
+  }
+  .flag.ok{background:var(--green);}
+  .flag.warn{background:var(--amber);}
+  .flag.bad{background:var(--red);}
+  .kpi .bench{font-size:10.5px; color:var(--text-dim); margin-top:4px;}
+
+  /* chart */
+  .chart-card{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:22px;
+  }
+  .legend{display:flex; gap:18px; font-size:12px; color:var(--text-dim); margin-top:10px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .dot{width:9px; height:9px; border-radius:2px; display:inline-block;}
+
+  /* two-col */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--text-dim); font-weight:600; padding:8px 10px; border-bottom:1px solid var(--border);
+  }
+  td{padding:9px 10px; border-bottom:1px solid var(--border); color:var(--text);}
+  tr:last-child td{border-bottom:none;}
+  .num{text-align:right; font-variant-numeric:tabular-nums;}
+  .tag{
+    display:inline-block; padding:2px 8px; border-radius:20px; font-size:10.5px; font-weight:600;
+  }
+  .tag.good{background:rgba(95,191,122,.15); color:var(--green);}
+  .tag.mid{background:rgba(224,169,74,.15); color:var(--amber);}
+  .tag.bad{background:rgba(226,105,95,.15); color:var(--red);}
+
+  .bar-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .bar-label{width:170px; font-size:12.5px; color:var(--text-dim); flex-shrink:0;}
+  .bar-track{flex:1; background:#20251f; border-radius:4px; height:20px; position:relative; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:4px;}
+  .bar-val{width:90px; text-align:right; font-size:12.5px; font-variant-numeric:tabular-nums; flex-shrink:0;}
+
+  .callout{
+    border:1px solid var(--border); border-left:3px solid var(--gold);
+    background:var(--bg-card); border-radius:4px; padding:16px 20px; font-size:13.5px;
+  }
+  .callout.critical{border-left-color:var(--red);}
+  .callout.critical .eyebrow{color:var(--red);}
+  .callout p{margin:6px 0;}
+  .callout b{color:var(--gold-soft);}
+
+  .analysis-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;}
+  .a-card{background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:18px;}
+  .a-card h3{font-size:14px; margin-bottom:10px;}
+  .a-card.pos h3{color:var(--green);}
+  .a-card.att h3{color:var(--amber);}
+  .a-card.rec h3{color:var(--gold-soft);}
+  .a-card ul{margin:0; padding-left:18px; font-size:13px; color:var(--text-dim);}
+  .a-card li{margin-bottom:10px;}
+  .a-card li b{color:var(--text);}
+  .a-card.rec li{color:var(--text);}
+  .a-card.rec li .pri{color:var(--gold); font-weight:700; margin-right:4px;}
+
+  footer{margin-top:50px; color:var(--text-dim); font-size:11.5px; border-top:1px solid var(--border); padding-top:16px;}
+
+  .loading{text-align:center; color:var(--text-dim); padding:40px;}
+  .error{background:rgba(226,105,95,.1); border:1px solid var(--red); padding:16px; border-radius:4px; color:var(--red); margin-bottom:24px;}
+
+  @media(max-width:900px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .two-col, .analysis-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="eyebrow">Campanha evergreen</div>
+    <h1>Treinamento Ancestral</h1>
+    <div class="sub">Performance em tempo real — Meta Ads + Funil Comercial</div>
+  </div>
+  <div class="period">
+    <b id="period-display">—</b>
+    <span>Último atualizado</span>
+  </div>
+</header>
+
+<div id="dashboard-content">
+  <div class="loading">Carregando dados...</div>
+</div>
+
+<footer id="dashboard-footer">
+  Carregando informações de rodapé...
+</footer>
+
+<script>
+async function loadDashboard() {
+  try {
+    const response = await fetch('dados.json');
+    if (!response.ok) throw new Error('Arquivo dados.json não encontrado');
+    
+    const data = await response.json();
+    renderDashboard(data);
+  } catch (error) {
+    document.getElementById('dashboard-content').innerHTML = `
+      <div class="error">
+        <strong>Erro ao carregar dados:</strong> ${error.message}
+        <br><small>Verifique se dados.json foi gerado corretamente.</small>
+      </div>
+    `;
+  }
+}
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value);
+}
+
+function formatPercent(value) {
+  return (value * 100).toFixed(1) + '%';
+}
+
+function getKPIFlag(value, metric) {
+  if (metric === 'cpl') {
+    if (value <= 11) return 'ok';
+    if (value <= 15) return 'warn';
+    return 'bad';
+  }
+  return 'ok';
+}
+
+function renderDashboard(data) {
+  const meta = data.meta_metrics;
+  const funnel = data.funnel_metrics;
+  const cac = data.cac_metrics;
+  const weekly = data.weekly_data;
+  
+  // Atualiza período
+  document.getElementById('period-display').textContent = 
+    `${data.period.start} a ${data.period.end}`;
+  
+  // Constrói HTML
+  let html = '';
+  
+  // KPIs principais
+  html += `
+    <section>
+      <div class="sec-title"><span class="n">01</span><h2>KPIs principais</h2></div>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="label">Gasto total</div>
+          <div class="val">${formatCurrency(meta.total_spend)}</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Conversas iniciadas</div>
+          <div class="val">${meta.total_conversas}</div>
+          <div class="bench">Meta: 150/mês</div>
+        </div>
+        <div class="kpi">
+          <div class="label">CPL médio</div>
+          <div class="val">${formatCurrency(meta.average_cpl)}</div>
+          <div class="flag ${getKPIFlag(meta.average_cpl, 'cpl')}"></div>
+          <div class="bench">Meta: ${formatCurrency(meta.target_cpl)}</div>
+        </div>
+        <div class="kpi">
+          <div class="label">CAC (conversando)</div>
+          <div class="val">${formatCurrency(cac.cac_leads_conversando)}</div>
+        </div>
+        <div class="kpi">
+          <div class="label">CAC (matriculados)</div>
+          <div class="val">${formatCurrency(cac.cac_matriculados)}</div>
+        </div>
+      </div>
+    </section>
+  `;
+  
+  // Dados semanais
+  if (weekly.length > 0) {
+    html += `
+      <section>
+        <div class="sec-title"><span class="n">02</span><h2>Performance semanal</h2></div>
+        <div class="chart-card">
+          <table>
+            <tr>
+              <th>Semana</th>
+              <th class="num">Gasto</th>
+              <th class="num">Conversas</th>
+              <th class="num">CPL</th>
+            </tr>
+    `;
+    
+    weekly.forEach(week => {
+      const cplTag = week.cpl <= 11 ? 'good' : (week.cpl <= 15 ? 'mid' : 'bad');
+      html += `
+        <tr>
+          <td>${week.date}</td>
+          <td class="num">${formatCurrency(week.spend)}</td>
+          <td class="num">${week.conversas}</td>
+          <td class="num"><span class="tag ${cplTag}">${formatCurrency(week.cpl)}</span></td>
+        </tr>
+      `;
+    });
+    
+    html += `
+          </table>
+        </div>
+      </section>
+    `;
+  }
+  
+  // Funil comercial
+  html += `
+    <section>
+      <div class="sec-title"><span class="n">03</span><h2>Cruzamento com funil comercial</h2></div>
+      <div class="callout">
+        <div class="eyebrow">Status do funil</div>
+        <p>Total de <b>${funnel.total_leads} leads</b> no período: <b>${funnel.leads_matriculados} matriculados</b>, <b>${funnel.leads_conversando} ainda conversando</b>, <b>${funnel.leads_perdidos} perdidos</b>.</p>
+      </div>
+    </section>
+  `;
+  
+  // Perfil dos leads
+  html += `
+    <section>
+      <div class="sec-title"><span class="n">04</span><h2>Perfil dos leads</h2></div>
+      <div class="two-col">
+        <div class="chart-card">
+          <h3 style="font-size:13px; color:#9aa39a; margin-bottom:14px; font-weight:600;">GÊNERO</h3>
+          <table>
+            <tr><th>Gênero</th><th class="num">Leads</th><th class="num">% do total</th></tr>
+  `;
+  
+  const totalLeads = funnel.total_leads || 1;
+  const masculino = funnel.gender_breakdown.Masculino || 0;
+  const feminino = funnel.gender_breakdown.Feminino || 0;
+  
+  html += `
+            <tr><td>Masculino</td><td class="num">${masculino}</td><td class="num">${((masculino/totalLeads)*100).toFixed(1)}%</td></tr>
+            <tr><td>Feminino</td><td class="num">${feminino}</td><td class="num">${((feminino/totalLeads)*100).toFixed(1)}%</td></tr>
+            <tr><td>Total</td><td class="num">${totalLeads}</td><td class="num">100%</td></tr>
+          </table>
+          <div class="bar-row" style="margin-top:16px;">
+            <div class="bar-label">Masculino</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(masculino/totalLeads)*100}%; background:var(--fb);"></div></div>
+            <div class="bar-val">${((masculino/totalLeads)*100).toFixed(1)}%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Feminino</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(feminino/totalLeads)*100}%; background:var(--ig);"></div></div>
+            <div class="bar-val">${((feminino/totalLeads)*100).toFixed(1)}%</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 style="font-size:13px; color:#9aa39a; margin-bottom:14px; font-weight:600;">TEMPERATURA DO LEAD</h3>
+          <table>
+            <tr><th>Temperatura</th><th class="num">Leads</th><th class="num">% do total</th></tr>
+  `;
+  
+  Object.entries(funnel.temperature_breakdown).forEach(([temp, count]) => {
+    const percent = ((count / totalLeads) * 100).toFixed(1);
+    let tag = 'mid';
+    if (temp.toLowerCase().includes('frio')) tag = 'bad';
+    else if (temp.toLowerCase().includes('quente')) tag = 'good';
+    
+    html += `
+            <tr>
+              <td>${temp}</td>
+              <td class="num">${count}</td>
+              <td class="num"><span class="tag ${tag}">${percent}%</span></td>
+            </tr>
+    `;
+  });
+  
+  html += `
+          </table>
+        </div>
+      </div>
+    </section>
+  `;
+  
+  // Footer
+  const footerHtml = `Dashboard gerado a partir de Meta Ads API (conta ${data.campaign_id || '2509831302750231'}) e da planilha DeRose_Comercial_Dashboard. Período: ${data.period.start} a ${data.period.end}. Última atualização: ${new Date(data.generated_at).toLocaleString('pt-BR')}.`;
+  
+  document.getElementById('dashboard-content').innerHTML = html;
+  document.getElementById('dashboard-footer').textContent = footerHtml;
+}
+
+// Carrega ao inicializar
+loadDashboard();
+
+// Recarrega a cada 5 minutos
+setInterval(loadDashboard, 5 * 60 * 1000);
+</script>
+
+</body>
+</html>
