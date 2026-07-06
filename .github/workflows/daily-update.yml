@@ -2,9 +2,8 @@ name: Daily Dashboard Update
 
 on:
   schedule:
-    # Executa todos os dias às 8h (UTC-3 = 11h em UTC)
     - cron: '0 11 * * *'
-  workflow_dispatch:  # Permite execução manual
+  workflow_dispatch:
 
 jobs:
   update-dashboard:
@@ -12,8 +11,6 @@ jobs:
     
     permissions:
       contents: write
-      pages: write
-      id-token: write
     
     steps:
       - name: Checkout repository
@@ -42,16 +39,4 @@ jobs:
           git config --global user.email "dashboard@derose.local"
           git add dados.json
           git commit -m "chore: update dashboard data at $(date)" || echo "No changes to commit"
-          git push
-      
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: '.'
-      
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+          git push || echo "No changes to push"
