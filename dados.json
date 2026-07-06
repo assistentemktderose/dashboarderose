@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-07-06T19:13:16.230494",
+  "period": {
+    "start": "2026-06-06",
+    "end": "2026-07-06"
+  },
+  "meta_metrics": {
+    "total_spend": 0,
+    "total_conversas": 0,
+    "average_cpl": 0,
+    "target_cpl": 11.0
+  },
+  "funnel_metrics": {
+    "total_leads": 24,
+    "leads_conversando": 1,
+    "leads_perdidos": 21,
+    "leads_matriculados": 0,
+    "gender_breakdown": {
+      "Masculino": 17,
+      "Feminino": 5
+    },
+    "temperature_breakdown": {
+      "Morno": 1,
+      "Frio": 21,
+      "": 2
+    }
+  },
+  "cac_metrics": {
+    "cac_leads_conversando": 0.0,
+    "cac_matriculados": 0
+  },
+  "weekly_data": []
+}
