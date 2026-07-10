@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-09T18:13:05.107115",
+  "generated_at": "2026-07-10T17:29:17.226054",
   "period": {
-    "start": "2026-06-09",
-    "end": "2026-07-09"
+    "start": "2026-06-10",
+    "end": "2026-07-10"
   },
   "meta_metrics": {
     "total_spend": 0,
@@ -12,16 +12,16 @@
   },
   "funnel_metrics": {
     "total_leads": 24,
-    "leads_conversando": 1,
-    "leads_perdidos": 21,
+    "leads_conversando": 3,
+    "leads_perdidos": 19,
     "leads_matriculados": 0,
     "gender_breakdown": {
       "Masculino": 17,
       "Feminino": 5
     },
     "temperature_breakdown": {
-      "Morno": 1,
-      "Frio": 21,
+      "Morno": 3,
+      "Frio": 19,
       "": 2
     }
   },
