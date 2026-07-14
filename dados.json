@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-13T18:06:48.009122",
+  "generated_at": "2026-07-14T16:02:49.205651",
   "period": {
-    "start": "2026-06-13",
-    "end": "2026-07-13"
+    "start": "2026-06-14",
+    "end": "2026-07-14"
   },
   "meta_metrics": {
     "total_spend": 0,
@@ -11,18 +11,18 @@
     "target_cpl": 11.0
   },
   "funnel_metrics": {
-    "total_leads": 24,
-    "leads_conversando": 3,
-    "leads_perdidos": 19,
+    "total_leads": 29,
+    "leads_conversando": 4,
+    "leads_perdidos": 25,
     "leads_matriculados": 0,
     "gender_breakdown": {
-      "Masculino": 17,
+      "Masculino": 24,
       "Feminino": 5
     },
     "temperature_breakdown": {
       "Morno": 3,
-      "Frio": 19,
-      "": 2
+      "Frio": 25,
+      "Aquecendo p/ agendamento": 1
     }
   },
   "cac_metrics": {
